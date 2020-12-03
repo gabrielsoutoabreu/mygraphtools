@@ -27,7 +27,6 @@ Um objeto da classe `Graph()` possuirá os seguintes atributos públicos:
 | connected | Atributo booleano que indica se o grafo é conexo |
 | edges | Lista das arestas do grafo |
 | vertices | Lista dos vértices |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
 
 ## Métodos
 Com um grafo criado podemos usar algumns métodos para manipulá-lo:
@@ -51,7 +50,7 @@ Com um grafo criado podemos usar algumns métodos para manipulá-lo:
     edges = myGraph.numedges()  
     ```
 
-* `numvertices()` - Método que retorna o número de arestas do grafo
+* `numvertices()` - Método que retorna o número de vértices do grafo
     ```sh
     vertices = myGraph.numvertices()
     ```
