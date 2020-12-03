@@ -2,3 +2,4 @@ dist
 mygraphtools.egg-info
 setup.py
 setup.cfg
+__pycache__

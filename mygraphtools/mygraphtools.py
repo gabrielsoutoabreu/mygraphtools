@@ -29,9 +29,10 @@ class UnionFind():
 
 class Graph():
 
-    def __init__(self, directed,  weighted):
+    def __init__(self, directed,  weighted, connected):
         self.weighted = weighted
         self.directed = directed
+        self.connected = connected
         self.edges = []
         self.vertices = []
         if weighted:
@@ -47,7 +48,6 @@ class Graph():
         vertexV, vertexW = edge[0], edge[1]
         for edge in self.edges:
             if vertexV == edge[0] and vertexW == edge[1]:
-                if self.directed:
                     return True
             elif not self.directed:
                 if vertexV == edge[1] and vertexW == edge[0]:
@@ -111,7 +111,7 @@ class Graph():
         return adjacencyList
 
     def degree(self, vertex):
-        pass
+        return len(self.adjacentvertices(vertex))
 
     def calculatemst(self):
         if not self.weighted or self.directed:

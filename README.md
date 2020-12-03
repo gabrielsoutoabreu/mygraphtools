@@ -28,6 +28,8 @@ Um objeto da classe `Graph()` possuirá os seguintes atributos públicos:
 | edges | Lista das arestas do grafo |
 | vertices | Lista dos vértices |
 
+Para acessar o atributo, use `Object.attribute`
+
 ## Métodos
 Com um grafo criado podemos usar algumns métodos para manipulá-lo:
 
@@ -76,3 +78,4 @@ Com os métodos e atributos descritos acima, é possível modelar um grafo para 
     ```sh
     mst = myGraph.calculatemst()
     ```
+    Grafos ponderados possuem os atributos `myGraph.mst` e `myGraph.mstcost` que representam respectivamente as arestas que formam a MST e o custo da mesma.
