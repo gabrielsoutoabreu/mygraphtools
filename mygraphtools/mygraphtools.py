@@ -48,7 +48,7 @@ class Graph():
         vertexV, vertexW = edge[0], edge[1]
         for edge in self.edges:
             if vertexV == edge[0] and vertexW == edge[1]:
-                    return True
+                return True
             elif not self.directed:
                 if vertexV == edge[1] and vertexW == edge[0]:
                     return True
@@ -60,7 +60,7 @@ class Graph():
             return
         else:
             if self.__edgeAlreadyExist(args):
-                print('The edge', args, 'already exists')
+                print('The edge (', args[0], ',', args[1], ') already exists')
                 return
             elif self.weighted and len(args) == 3:
                 self.edges.append(args)
@@ -113,6 +113,25 @@ class Graph():
     def degree(self, vertex):
         return len(self.adjacentvertices(vertex))
 
+    def dfs(self, vertex):
+        if vertex in self.vertices:
+            visited, visitedVertices = [False for x in range(len(self.vertices))], []
+
+            def calc(vertex):
+                visited[vertex] = True
+                visitedVertices.append(vertex)
+                for v in self.adjacentvertices(vertex):
+                    if not visited[v]:
+                        calc(v)
+            calc(vertex)
+            return visitedVertices
+        else:
+            return []
+
+    def reach(self, vertexOrigin, vertexDestiny):
+        visited = self.dfs(vertexOrigin)
+        return True if vertexDestiny in visited else False
+
     def calculatemst(self):
         if not self.weighted or self.directed:
             return []
@@ -128,4 +147,5 @@ class Graph():
                     UF.union(vertexV, vertexW)
                     self.mst.append(edge)
                     self.mstcost += edge[-1]
+
         return self.mst

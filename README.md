@@ -11,11 +11,11 @@ pip install mygraphtools
 ## Criando um grafo
 Importamos a class Graph da nossa biblioteca
 ```sh 
- from mygraphtools import Graph 
+ >>> from mygraphtools import Graph 
 ``` 
 Criamos uma instância, repare que é necessário informar se o grafo é: [Dirigido](https://pt.wikipedia.org/wiki/Grafo_orientado), [Ponderado](https://pt.wikipedia.org/wiki/Grafo_valorado#:~:text=Um%20grafo%20valorado%20ou%20grafo,arestas%20a%20conjunto%20de%20n%C3%BAmeros.) e [Conexo](https://www.pucsp.br/~jarakaki/grafos/Aula4.pdf)
 ```sh
-myGraph = Graph(directed=False, weighted=True, connected=True)
+>>> myGraph = Graph(directed=False, weighted=True, connected=True)
 ``` 
 ## Atributos
 Um objeto da classe `Graph()` possuirá os seguintes atributos públicos:
@@ -36,38 +36,38 @@ Com um grafo criado podemos usar algumns métodos para manipulá-lo:
 * `addedge()` - Método usado para adicionar arestas ao seu grafo e por consequência os vértices também, os parâmetros são: no mínimo dois vértices e o custo relacionado à aresta em casos de grafos ponderados
     * Criando uma aresta entre os vértices 0 e 1:
         ```sh
-        myGraph.addedge(0, 1)
+        >>> myGraph.addedge(0, 1)
         ```
     * Criando uma aresta entre os vértices 0 e 1 com custo 10    
         ```sh
-        myGraph.addedge(0, 1, 10)
+        >>> myGraph.addedge(0, 1, 10)
         ```
  
 * `cost()` - Método que retorna o custo total do grafo, obviamente para grafos ponderados
     ```sh    
-    cost = myGraph.cost()
+    >>> cost = myGraph.cost()
     ```
 * `numedges()` - Método que retorna o número de arestas do grafo
     ```sh   
-    edges = myGraph.numedges()  
+    >>> edges = myGraph.numedges()  
     ```
 
 * `numvertices()` - Método que retorna o número de vértices do grafo
     ```sh
-    vertices = myGraph.numvertices()
+    >>> vertices = myGraph.numvertices()
     ```
 * `degree(vertex)` - Método que recebe um vértice V e retorna o [grau](https://pt.wikipedia.org/wiki/Grau_(teoria_dos_grafos)) de V
     ```sh
-    degree = myGraph.degree(0)
+    >>> degree = myGraph.degree(0)
     ```
 
 * `adjacentvertices(vertex)` - Método que recebe um vértice V e retorna uma lista de todos os vértices que são [adjacentes](https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/graphs.html#neighbour) a V
     ```sh
-    adjacencyList = myGraph.adjacentvertices(0)
+    >>> adjacencyList = myGraph.adjacentvertices(0)
     ```
 * `adjacentedges` - Método que recebe um vértice V e retorna uma lista com as arestas que formam o leque de saída de V, isto é, as arestas que ligam V a seus adjacentes.
     ```sh
-    adjacencyList = myGraph.adjacentedges(0)
+    >>> adjacencyList = myGraph.adjacentedges(0)
     ```
 ## Algoritmos da Teoria de Grafos
 Com os métodos e atributos descritos acima, é possível modelar um grafo para implementar alguns algoritmos com mais facilidade, mas para quem necessita de agilidade temos os algoritmos implementados na nossa classe.
@@ -76,6 +76,30 @@ Com os métodos e atributos descritos acima, é possível modelar um grafo para 
     Para calcular a [Minimum Spanning Tree](https://en.wikipedia.org/wiki/Minimum_spanning_tree) (MST) do seu grafo, basta fazer uma chamada do método `calculatemst()`, que retorna uma lista com as arestas que formam a MST.
 
     ```sh
-    mst = myGraph.calculatemst()
+    >>> mst = myGraph.calculatemst()
     ```
     Grafos ponderados possuem os atributos `myGraph.mst` e `myGraph.mstcost` que representam respectivamente as arestas que formam a MST e o custo da mesma.
+    
+* #### Busca em Profundidade (Depth-First Search)
+    A classe `Graph()` implementa o algoritmo de Busca em Profundidade, [DFS](https://en.wikipedia.org/wiki/Depth-first_search), para a funcionalidade de busca. Dado um vértice V, o método retorna uma lista com todos os vértices que podem ser alcançados a partir de V.
+    ```sh
+    >>> myGraph.addedge(0, 1)
+    >>> myGraph.addedge(0, 2)
+    >>> myGraph.addedge(1, 3)
+    >>> myGraph.addedge(3, 4)
+    >>> print(myGraph.dfs(1))
+    [1, 3, 4]
+    >>> 
+    ```
+    Aliada a ideia de busca a classe `Graph()` possui o método `reach()`, que recebe um vértice de origem V e um vértice de destino W e retorna `True` caso seja possível alcançar W a partir de V e `False` caso contrário.
+    ```sh
+    >>> myGraph.addedge(0, 1)
+    >>> myGraph.addedge(0, 2)
+    >>> myGraph.addedge(1, 3)
+    >>> myGraph.addedge(3, 4)
+    >>> print(myGraph.reach(1, 2))
+    False
+    >>> print(myGraph.reach(1, 4))
+    True
+    >>>
+    ```
