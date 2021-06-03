@@ -32,15 +32,19 @@ class Graph():
     def getMst(self):
         return deepcopy(self.__mst) if self.__weighted else None
 
+
+    def __vertexIsValid(self, v):
+        if type(v) == int or (type(v) == str and v.isalpha()): return True
+        return False
+
+    def getEdgesSortedByCost(self):
+        return sorted(self.__edges, key=lambda edge: edge[-1]) if self.__weighted else None
+
     def edgeAlreadyExists(self, edge):
         equals = lambda v, w: v == w
         for e in self.__edges:
             if equals(e[0], edge[0]) and equals(e[1], edge[1]): return True
             if equals(e[0], edge[1]) and equals(e[1], edge[0]) and self.__directed: return True
-        return False
-
-    def __vertexIsValid(self, v):
-        if type(v) == int or (type(v) == str and v.isalpha()): return True
         return False
 
     def setVertex(self, vertex):
