@@ -3,149 +3,96 @@
 Gabriel Vinícius Souto Abreu
 '''
 
-
+from UnionFind import UnionFind
 from functools import reduce
-
-
-class UnionFind():
-    def __init__(self, vertices):
-        self.boss = [x for x in range(vertices)]
-        self.size = [1 for x in range(vertices)]
-
-    def find(self, vertex):
-        copyV = vertex
-        while copyV != self.boss[copyV]:
-            copyV = self.boss[copyV]
-        return copyV
-
-    def union(self, vertexV, vertexW):
-        if self.size[vertexV] < self.size[vertexW]:
-            self.boss[vertexV] = vertexW
-            self.size[vertexW] += self.size[vertexV]
-        else:
-            self.boss[vertexW] = vertexV
-            self.size[vertexV] += self.size[vertexW]
-
+from copy import deepcopy
 
 class Graph():
 
     def __init__(self, directed,  weighted, connected):
-        self.weighted = weighted
-        self.directed = directed
-        self.connected = connected
-        self.edges = []
-        self.vertices = []
+        self.__weighted = weighted
+        self.__directed = directed
+        self.__connected = connected
+        self.__edges = list()
+        self.__vertices = list()
         if weighted:
-            self.mst = []
-            self.mstcost = 0
+            self.__mst = list()
+            self.__mstcost = 0
 
-    def __addvertice(self, args):
-        for vertex in args[:2]:
-            if not vertex in self.vertices:
-                self.vertices.append(vertex)
+    def getEdgesNumber(self):
+        return len(self.__edges)
+    def getEdges(self):
+        return deepcopy(self.__edges)
 
-    def __edgeAlreadyExist(self, edge):
-        vertexV, vertexW = edge[0], edge[1]
-        for edge in self.edges:
-            if vertexV == edge[0] and vertexW == edge[1]:
-                return True
-            elif not self.directed:
-                if vertexV == edge[1] and vertexW == edge[0]:
-                    return True
+    def getVerticesNumber(self):
+        return len(self.__vertices)
+    def getVertices(self):
+        return deepcopy(self.__vertices)
+
+    def getMst(self):
+        return deepcopy(self.__mst) if self.__weighted else None
+
+    def edgeAlreadyExists(self, edge):
+        equals = lambda v, w: v == w
+        for e in self.__edges:
+            if equals(e[0], edge[0]) and equals(e[1], edge[1]): return True
+            if equals(e[0], edge[1]) and equals(e[1], edge[0]) and self.__directed: return True
         return False
 
-    def addedge(self, *args):
-        if self.weighted and len(args) != 3 or not self.weighted and len(args) != 2:
-            print('Failed to add edge: invalid arguments')
-            return
-        else:
-            if self.__edgeAlreadyExist(args):
-                print('The edge (', args[0], ',', args[1], ') already exists')
-                return
-            elif self.weighted and len(args) == 3:
-                self.edges.append(args)
-            else:
-                self.edges.append(args)
-        self.__addvertice(args)
+    def __vertexIsValid(self, v):
+        if type(v) == int or (type(v) == str and v.isalpha()): return True
+        return False
 
-    def cost(self):
-        if not self.weighted:
-            return 0
-        else:
-            def adder(elem, elem_): return elem + elem_
-            costs = list(map(lambda edge: edge[-1], self.edges))
-            return reduce(adder, costs)
+    def setVertex(self, vertex):
+        if not self.__vertexIsValid(vertex): 
+            raise TypeError('vertices must be identified by int or str')
+        self.__vertices.append(vertex)
+        self.__vertices = deepcopy(list(set(self.__vertices)))
+        return True
 
-    def numedges(self):
-        return len(self.edges)
+    def setEdge(self, v, w, cost=None):
+        '''
+            set a edge tuple => (vertexV, vertexW, if weighted: cost )
+            if directed: edge(vertexV, vertexW) != edge(vertexW, vertexV)
+        '''
+        if self.setVertex(v) and self.setVertex(w):
+            if self.edgeAlreadyExists((v, w)): return
+            cost = 0 if cost == None and self.__weighted else cost
+            self.__edges.append( (v, w, cost) )
 
-    def numvertices(self):
-        return len(self.vertices)
+    # def dfs(self, vertex):
+    #     if vertex in self.vertices:
+    #         visited, visitedVertices = [False for x in range(len(self.vertices))], []
 
-    def __freeMST(self):
-        self.mst = []
-        self.mstCost = 0
+    #         def calc(vertex):
+    #             visited[vertex] = True
+    #             visitedVertices.append(vertex)
+    #             for v in self.adjacentvertices(vertex):
+    #                 if not visited[v]:
+    #                     calc(v)
+    #         calc(vertex)
+    #         return visitedVertices
+    #     else:
+    #         return []
 
-    def __sortEdgesByCost(self):
-        self.edges.sort(key=lambda edge: edge[-1])
+    # def reach(self, vertexOrigin, vertexDestiny):
+    #     visited = self.dfs(vertexOrigin)
+    #     return True if vertexDestiny in visited else False
 
-    def adjacentvertices(self, vertex):
-        adjacencyList = []
-        for edge in self.edges:
-            if edge[0] == vertex:
-                adjacencyList.append(edge[1])
-            elif not self.directed:
-                if edge[1] == vertex:
-                    adjacencyList.append(edge[0])
-        return adjacencyList
+    # def calculatemst(self):
+    #     if not self.__weighted or self.__directed:
+    #         return []
+    #     else:
+    #         # self.__freeMST()
+    #         # UF = UnionFind(self.numvertices())
+    #         # self.__sortEdgesByCost()
 
-    def adjacentedges(self, vertex):
-        adjacencyList = []
-        for edge in self.edges:
-            if not self.directed:
-                if vertex in edge:
-                    adjacencyList.append(edge)
-            else:
-                if vertex == edge[0]:
-                    adjacencyList.append(edge)
-        return adjacencyList
+    #         for edge in self.edges:
+    #             vertexV = UF.find(edge[0])
+    #             vertexW = UF.find(edge[1])
+    #             if vertexV != vertexW:
+    #                 UF.union(vertexV, vertexW)
+    #                 self.mst.append(edge)
+    #                 self.mstcost += edge[-1]
 
-    def degree(self, vertex):
-        return len(self.adjacentvertices(vertex))
-
-    def dfs(self, vertex):
-        if vertex in self.vertices:
-            visited, visitedVertices = [False for x in range(len(self.vertices))], []
-
-            def calc(vertex):
-                visited[vertex] = True
-                visitedVertices.append(vertex)
-                for v in self.adjacentvertices(vertex):
-                    if not visited[v]:
-                        calc(v)
-            calc(vertex)
-            return visitedVertices
-        else:
-            return []
-
-    def reach(self, vertexOrigin, vertexDestiny):
-        visited = self.dfs(vertexOrigin)
-        return True if vertexDestiny in visited else False
-
-    def calculatemst(self):
-        if not self.weighted or self.directed:
-            return []
-        else:
-            self.__freeMST()
-            UF = UnionFind(self.numvertices())
-            self.__sortEdgesByCost()
-
-            for edge in self.edges:
-                vertexV = UF.find(edge[0])
-                vertexW = UF.find(edge[1])
-                if vertexV != vertexW:
-                    UF.union(vertexV, vertexW)
-                    self.mst.append(edge)
-                    self.mstcost += edge[-1]
-
-        return self.mst
+    #     return self.mst
